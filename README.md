@@ -14,11 +14,11 @@
 
 ## 依赖
 - Qt 5.x（core / gui / widgets / multimedia / multimediawidgets）
-- Linux 内核驱动
-- 百度 AI 开放平台账号（ASR / TTS）
-- 硅基流动 API 账号（DeepSeek-V3）
+- Linux 内核驱动（driver文件下）
+- 百度 AI 开放平台（ASR/TTS）账号
+- 硅基流动 API 账号
 
 ## 环境要求
 linux 4.1.15
-buildroot根系统
+buildroot根系统（#根文件系统构建）
 
