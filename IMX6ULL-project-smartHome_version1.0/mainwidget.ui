@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWidget</class>
+ <widget class="QWidget" name="mainWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>mainWidget</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>621</width>
+     <height>421</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
+   </property>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>600</width>
+      <height>400</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="page"/>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>71</width>
+     <height>421</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="basicFunUIBtn">
+      <property name="minimumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/icon/icon/主界面.png);
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="musicPlayerBtn">
+      <property name="minimumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/icon/icon/音乐界面.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="videoPlayerBtn">
+      <property name="minimumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/icon/icon/视频界面.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_3">
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="cameraBtn">
+      <property name="minimumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/icon/icon/摄像界面.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_4">
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="aiAssistantBtn">
+      <property name="minimumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>61</width>
+        <height>61</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/icon/icon/AI界面.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

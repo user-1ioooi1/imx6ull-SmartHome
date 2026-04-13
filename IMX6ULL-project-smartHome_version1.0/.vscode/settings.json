@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "led.h": "c",
+        "fcntl.h": "c",
+        "unistd.h": "c",
+        "stat.h": "c",
+        "types.h": "c",
+        "sg90.h": "c"
+    }
+}
