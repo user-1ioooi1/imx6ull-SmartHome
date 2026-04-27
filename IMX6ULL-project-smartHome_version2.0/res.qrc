@@ -1,0 +1,51 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GlobalStyle.qss</file>
+        <file>config.ini</file>
+        <file>AI.png</file>
+    </qresource>
+    <qresource prefix="/icon">
+        <file>icon/光照.png</file>
+        <file>icon/空气质量.png</file>
+        <file>icon/人体移动.png</file>
+        <file>icon/湿度.png</file>
+        <file>icon/温度.png</file>
+        <file>icon/窗帘.png</file>
+        <file>icon/灯亮.png</file>
+        <file>icon/关锁.png</file>
+        <file>icon/门铃.png</file>
+        <file>icon/主界面.png</file>
+        <file>icon/音乐界面.png</file>
+        <file>icon/视频界面.png</file>
+        <file>icon/摄像界面.png</file>
+        <file>icon/AI界面.png</file>
+        <file>icon/开关.png</file>
+        <file>icon/开关_蓝.png</file>
+        <file>icon/播放.png</file>
+        <file>icon/上一个.png</file>
+        <file>icon/下一个.png</file>
+        <file>icon/暂停.png</file>
+        <file>icon/文件夹.png</file>
+        <file>icon/麦克风.png</file>
+        <file>icon/相册.png</file>
+        <file>icon/返回.png</file>
+        <file>icon/拍摄.png</file>
+        <file>icon/loc.png</file>
+        <file>icon/update.png</file>
+        <file>icon/录像.png</file>
+        <file>icon/录像2.png</file>
+    </qresource>
+    <qresource prefix="/res">
+        <file>res/dashboard.html</file>
+    </qresource>
+    <qresource prefix="/icon/weather">
+        <file>weatherIcon/大风.png</file>
+        <file>weatherIcon/多云.png</file>
+        <file>weatherIcon/晴.png</file>
+        <file>weatherIcon/少云.png</file>
+        <file>weatherIcon/雪.png</file>
+        <file>weatherIcon/雨.png</file>
+        <file>weatherIcon/雾.png</file>
+        <file>weatherIcon/霾.png</file>
+    </qresource>
+</RCC>

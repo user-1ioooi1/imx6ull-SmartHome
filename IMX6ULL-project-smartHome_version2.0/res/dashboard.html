@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>智能家居</title>
+<style>
+:root {
+  --primary: #2563EB;
+  --primary-light: #EFF6FF;
+  --green: #16A34A;
+  --red: #DC2626;
+  --card-bg: #ffffff;
+  --bg: #F1F5F9;
+  --text: #1E293B;
+  --sub: #64748B;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; min-height: 100vh; }
+
+/* Header */
+.header { background: var(--primary); color: #fff; padding: 16px 16px 0; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .sub { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+
+/* Tab bar */
+.tab-bar { display: flex; background: var(--primary); padding: 10px 8px 0; gap: 4px; overflow-x: auto; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 0 0 auto; padding: 8px 14px; border: none; border-radius: 10px 10px 0 0;
+  background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8);
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background 0.15s;
+}
+.tab-btn.active { background: var(--bg); color: var(--primary); }
+
+/* Tab content */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Section title */
+.section-title { font-size: 13px; font-weight: 600; color: var(--sub); text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 20px 16px 8px; }
+
+/* Sensor grid */
+.sensor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 16px; }
+@media (min-width: 480px) { .sensor-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 720px) { .sensor-grid { grid-template-columns: repeat(4, 1fr); } }
+.sensor-card { background: var(--card-bg); border-radius: var(--radius); padding: 16px 12px;
+  box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 6px; }
+.sensor-card .icon { font-size: 22px; }
+.sensor-card .val  { font-size: 26px; font-weight: 700; color: var(--primary); line-height: 1; }
+.sensor-card .unit { font-size: 12px; color: var(--sub); }
+.sensor-card .name { font-size: 13px; color: var(--sub); margin-top: 2px; }
+
+/* Control grid */
+.ctrl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 16px 24px; }
+@media (min-width: 480px) { .ctrl-grid { grid-template-columns: repeat(4, 1fr); } }
+.ctrl-card { background: var(--card-bg); border-radius: var(--radius); padding: 14px 10px;
+  box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ctrl-card .ctrl-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.ctrl-btns { display: flex; gap: 8px; width: 100%; }
+.ctrl-btns button { flex: 1; padding: 10px 0; border: none; border-radius: 10px;
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+.ctrl-btns button:active { opacity: 0.7; }
+.btn-on  { background: #DCFCE7; color: var(--green); }
+.btn-off { background: #FEE2E2; color: var(--red); }
+
+/* Status bar */
+.status-bar { text-align: center; font-size: 12px; color: var(--sub); padding: 0 16px 32px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); margin-right: 5px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* Camera tab */
+.camera-section { padding: 16px; }
+.stream-btn {
+  display: block; width: 100%; max-width: 320px; margin: 0 auto 16px;
+  padding: 14px; border: none; border-radius: var(--radius);
+  background: var(--primary); color: #fff; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.stream-btn:active { opacity: 0.8; }
+.stream-btn.stop { background: var(--red); }
+.stream-container { text-align: center; }
+#streamImg {
+  width: 100%; max-width: 640px; border-radius: var(--radius);
+  box-shadow: var(--shadow); background: #000;
+  display: none;
+}
+.stream-tip { font-size: 12px; color: var(--sub); text-align: center; margin-top: 8px; }
+
+/* Photo album */
+.photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 16px 24px; }
+@media (min-width: 480px) { .photo-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 720px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
+.photo-item { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden;
+  box-shadow: var(--shadow); aspect-ratio: 1; background: #e2e8f0; }
+.photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-item .photo-name {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.5); color: #fff; font-size: 10px;
+  padding: 4px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Photo lightbox */
+.lightbox {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+  z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
+}
+.lightbox.show { display: flex; }
+.lightbox img { max-width: 95vw; max-height: 85vh; border-radius: 8px; }
+.lightbox-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.2); color: #fff; font-size: 18px; cursor: pointer;
+}
+
+/* Video / Music lists */
+.media-list { padding: 0 16px; margin-bottom: 16px; }
+.media-item {
+  background: var(--card-bg); border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer;
+  font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;
+  transition: background 0.15s;
+}
+.media-item:active { background: var(--primary-light); }
+.media-item.playing { background: var(--primary-light); color: var(--primary); }
+.media-item .media-icon { font-size: 20px; flex: 0 0 auto; }
+
+/* Player area */
+.player-area { padding: 0 16px 24px; }
+.player-area video,
+.player-area audio {
+  width: 100%; border-radius: var(--radius); box-shadow: var(--shadow);
+  background: #000; display: block;
+}
+.player-area audio { background: var(--card-bg); }
+
+.empty-tip { text-align: center; color: var(--sub); font-size: 14px; padding: 40px 16px; }
+
+/* Upload area */
+.upload-area {
+  margin: 0 16px 16px;
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.upload-label {
+  flex: 1; min-width: 120px; padding: 10px 14px; border-radius: 10px;
+  background: var(--primary-light); color: var(--primary);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  text-align: center; border: 2px dashed #93C5FD;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.upload-submit {
+  padding: 10px 18px; border: none; border-radius: 10px;
+  background: var(--primary); color: #fff;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  white-space: nowrap; transition: opacity 0.15s;
+}
+.upload-submit:active { opacity: 0.8; }
+.upload-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.upload-progress {
+  width: 100%; font-size: 12px; color: var(--sub); min-height: 18px;
+}
+.upload-progress .bar-wrap {
+  height: 6px; background: #E2E8F0; border-radius: 3px; margin-top: 6px; overflow: hidden;
+}
+.upload-progress .bar-fill {
+  height: 100%; background: var(--primary); border-radius: 3px;
+  transition: width 0.2s; width: 0%;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏠 智能家居控制台</h1>
+  <div class="sub" id="timestamp">正在连接设备...</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('control', this)">📊 控制台</button>
+  <button class="tab-btn" onclick="showTab('camera', this)">📹 摄像头</button>
+  <button class="tab-btn" onclick="showTab('album', this)">🖼️ 相册</button>
+  <button class="tab-btn" onclick="showTab('video', this)">🎬 视频</button>
+  <button class="tab-btn" onclick="showTab('music', this)">🎵 音乐</button>
+</div>
+
+<!-- ===== 控制台 ===== -->
+<div id="tab-control" class="tab-content active">
+  <div class="section-title">传感器数据</div>
+  <div class="sensor-grid">
+    <div class="sensor-card"><div class="icon">🌡️</div><div class="val" id="temperature">--</div><div class="unit">°C</div><div class="name">温度</div></div>
+    <div class="sensor-card"><div class="icon">💧</div><div class="val" id="humidity">--</div><div class="unit">%</div><div class="name">湿度</div></div>
+    <div class="sensor-card"><div class="icon">☀️</div><div class="val" id="light">--</div><div class="unit">lux</div><div class="name">光照</div></div>
+    <div class="sensor-card"><div class="icon">🚶</div><div class="val" id="motion">--</div><div class="unit"></div><div class="name">人体感应</div></div>
+    <div class="sensor-card"><div class="icon">🌫️</div><div class="val" id="airQuality">--</div><div class="unit"></div><div class="name">空气质量</div></div>
+  </div>
+
+  <div class="section-title">设备控制</div>
+  <div class="ctrl-grid">
+    <div class="ctrl-card">
+      <div class="ctrl-name">💡 灯光</div>
+      <div class="ctrl-btns">
+        <button class="btn-on"  onclick="ctrl('led_on')">开</button>
+        <button class="btn-off" onclick="ctrl('led_off')">关</button>
+      </div>
+    </div>
+    <div class="ctrl-card">
+      <div class="ctrl-name">🔒 门锁</div>
+      <div class="ctrl-btns">
+        <button class="btn-on"  onclick="ctrl('relay_on')">开</button>
+        <button class="btn-off" onclick="ctrl('relay_off')">关</button>
+      </div>
+    </div>
+    <div class="ctrl-card">
+      <div class="ctrl-name">🪟 窗帘</div>
+      <div class="ctrl-btns">
+        <button class="btn-on"  onclick="ctrl('curtain_open')">开</button>
+        <button class="btn-off" onclick="ctrl('curtain_close')">关</button>
+      </div>
+    </div>
+    <div class="ctrl-card">
+      <div class="ctrl-name">🔔 门铃</div>
+      <div class="ctrl-btns">
+        <button class="btn-on"  onclick="ctrl('beep_on')">响</button>
+        <button class="btn-off" onclick="ctrl('beep_off')">停</button>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar"><span class="dot"></span><span id="status-text">实时更新中</span></div>
+</div>
+
+<!-- ===== 摄像头 ===== -->
+<div id="tab-camera" class="tab-content">
+  <div class="camera-section">
+    <button id="streamBtn" class="stream-btn" onclick="toggleStream()">▶ 开始预览</button>
+    <div class="stream-container">
+      <img id="streamImg" alt="摄像头画面">
+      <div class="stream-tip" id="streamTip">点击上方按钮开始查看摄像头实时画面</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 相册 ===== -->
+<div id="tab-album" class="tab-content">
+  <div class="section-title">设备相册</div>
+  <!-- 上传区域 -->
+  <div class="upload-area">
+    <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none"
+           onchange="onPhotoSelected()">
+    <label class="upload-label" id="photoFileLabel" for="photoFileInput">📁 选择照片</label>
+    <button class="upload-submit" id="photoUploadBtn" onclick="uploadMedia('photo')" disabled>上传到设备</button>
+    <div class="upload-progress" id="photoProgress"></div>
+  </div>
+  <div id="photoGrid" class="photo-grid">
+    <div class="empty-tip" style="grid-column:1/-1">加载中...</div>
+  </div>
+</div>
+
+<!-- ===== 视频 ===== -->
+<div id="tab-video" class="tab-content">
+  <div class="section-title">视频文件</div>
+  <!-- 上传区域 -->
+  <div class="upload-area">
+    <input type="file" id="videoFileInput" accept="video/*" style="display:none"
+           onchange="onVideoSelected()">
+    <label class="upload-label" id="videoFileLabel" for="videoFileInput">📁 选择视频</label>
+    <button class="upload-submit" id="videoUploadBtn" onclick="uploadMedia('video')" disabled>上传到设备</button>
+    <div class="upload-progress" id="videoProgress"></div>
+  </div>
+  <div id="videoList" class="media-list">
+    <div class="empty-tip">加载中...</div>
+  </div>
+  <div class="player-area">
+    <video id="videoPlayer" controls preload="metadata"></video>
+  </div>
+</div>
+
+<!-- ===== 音乐 ===== -->
+<div id="tab-music" class="tab-content">
+  <div class="section-title">音乐文件</div>
+  <!-- 上传区域 -->
+  <div class="upload-area">
+    <input type="file" id="musicFileInput" accept="audio/*" multiple style="display:none"
+           onchange="onMusicSelected()">
+    <label class="upload-label" id="musicFileLabel" for="musicFileInput">📁 选择音乐</label>
+    <button class="upload-submit" id="musicUploadBtn" onclick="uploadMedia('music')" disabled>上传到设备</button>
+    <div class="upload-progress" id="musicProgress"></div>
+  </div>
+  <div id="musicList" class="media-list">
+    <div class="empty-tip">加载中...</div>
+  </div>
+  <div class="player-area">
+    <audio id="audioPlayer" controls preload="metadata"></audio>
+  </div>
+</div>
+
+<!-- 图片灯箱 -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+// ===== Tab 切换 =====
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  if (name === 'album') loadPhotos();
+  if (name === 'video') loadVideos();
+  if (name === 'music') loadMusic();
+  if (name !== 'camera' && isStreaming) stopStream();
+}
+
+// ===== 传感器轮询 =====
+function airQualityLabel(mv) {
+  if (typeof mv !== 'number') return '--';
+  if (mv < 200)  return '优';
+  if (mv < 400)  return '良';
+  if (mv < 600)  return '轻度污染';
+  if (mv < 800)  return '中度污染';
+  return '重度污染';
+}
+
+function update() {
+  fetch('/api/status')
+    .then(r => r.json())
+    .then(d => {
+      const s = d.sensors;
+      document.getElementById('temperature').textContent = s.temperature ?? '--';
+      document.getElementById('humidity').textContent    = s.humidity    ?? '--';
+      document.getElementById('light').textContent       = s.light       ?? '--';
+      document.getElementById('motion').textContent      = s.motion ? '有人' : '无人';
+      document.getElementById('airQuality').textContent  = airQualityLabel(s.airQuality);
+      document.getElementById('timestamp').textContent   = '更新于 ' + d.timestamp;
+      document.getElementById('status-text').textContent = '实时更新中';
+    })
+    .catch(() => {
+      document.getElementById('status-text').textContent = '连接失败，重试中...';
+    });
+}
+
+function ctrl(cmd) {
+  fetch('/api/control', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cmd })
+  }).catch(() => {});
+}
+
+// ===== 摄像头 =====
+var isStreaming = false;
+
+function toggleStream() {
+  if (isStreaming) {
+    stopStream();
+  } else {
+    startStream();
+  }
+}
+
+function startStream() {
+  var img = document.getElementById('streamImg');
+  var btn = document.getElementById('streamBtn');
+  var tip = document.getElementById('streamTip');
+  // Add timestamp to prevent browser caching the stopped state
+  img.src = '/api/camera/stream?t=' + Date.now();
+  img.style.display = 'block';
+  img.onerror = function() {
+    tip.textContent = '摄像头不可用或设备未连接';
+    stopStream();
+  };
+  btn.textContent = '⏹ 停止预览';
+  btn.classList.add('stop');
+  tip.textContent = '预览中 — 切换标签页将自动停止';
+  isStreaming = true;
+}
+
+function stopStream() {
+  var img = document.getElementById('streamImg');
+  var btn = document.getElementById('streamBtn');
+  var tip = document.getElementById('streamTip');
+  img.src = '';
+  img.style.display = 'none';
+  img.onerror = null;
+  btn.textContent = '▶ 开始预览';
+  btn.classList.remove('stop');
+  tip.textContent = '点击上方按钮开始查看摄像头实时画面';
+  isStreaming = false;
+ // 主动通知服务端停止推流，不依赖浏览器关闭 TCP 连接
+  fetch('/api/camera/stream/stop').catch(function(){});
+}
+
+// ===== 相册 =====
+function loadPhotos() {
+  fetch('/api/media/list?type=photo')
+    .then(r => r.json())
+    .then(data => {
+      var grid = document.getElementById('photoGrid');
+      if (!data.files || data.files.length === 0) {
+        grid.innerHTML = '<div class="empty-tip" style="grid-column:1/-1">暂无照片</div>';
+        return;
+      }
+      grid.innerHTML = data.files.map(function(f) {
+        var enc = encodeURIComponent(f);
+        return '<div class="photo-item" onclick="viewPhoto(\'' + enc + '\')">' +
+          '<img src="/api/media/photo/' + enc + '" loading="lazy" alt="' + f + '">' +
+          '<div class="photo-name">' + f + '</div>' +
+          '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      document.getElementById('photoGrid').innerHTML =
+        '<div class="empty-tip" style="grid-column:1/-1">加载失败</div>';
+    });
+}
+
+function viewPhoto(encoded) {
+  document.getElementById('lightboxImg').src = '/api/media/photo/' + encoded;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightboxImg').src = '';
+}
+
+// ===== 视频 =====
+var currentVideoItem = null;
+
+function loadVideos() {
+  fetch('/api/media/list?type=video')
+    .then(r => r.json())
+    .then(data => {
+      var list = document.getElementById('videoList');
+      if (!data.files || data.files.length === 0) {
+        list.innerHTML = '<div class="empty-tip">暂无视频</div>';
+        return;
+      }
+      list.innerHTML = data.files.map(function(f) {
+        var enc = encodeURIComponent(f);
+        return '<div class="media-item" id="vi-' + enc + '" onclick="playVideo(\'' + enc + '\', this)">' +
+          '<span class="media-icon">🎬</span>' + f +
+          '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      document.getElementById('videoList').innerHTML = '<div class="empty-tip">加载失败</div>';
+    });
+}
+
+function playVideo(encoded, el) {
+  if (currentVideoItem) currentVideoItem.classList.remove('playing');
+  if (el) { el.classList.add('playing'); currentVideoItem = el; }
+  var player = document.getElementById('videoPlayer');
+  player.src = '/api/media/video/' + encoded;
+  player.load();
+  player.play().catch(function(){});
+}
+
+// ===== 音乐 =====
+var currentMusicItem = null;
+
+function loadMusic() {
+  fetch('/api/media/list?type=music')
+    .then(r => r.json())
+    .then(data => {
+      var list = document.getElementById('musicList');
+      if (!data.files || data.files.length === 0) {
+        list.innerHTML = '<div class="empty-tip">暂无音乐</div>';
+        return;
+      }
+      list.innerHTML = data.files.map(function(f) {
+        var enc = encodeURIComponent(f);
+        return '<div class="media-item" id="mi-' + enc + '" onclick="playMusic(\'' + enc + '\', this)">' +
+          '<span class="media-icon">🎵</span>' + f +
+          '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      document.getElementById('musicList').innerHTML = '<div class="empty-tip">加载失败</div>';
+    });
+}
+
+function playMusic(encoded, el) {
+  if (currentMusicItem) currentMusicItem.classList.remove('playing');
+  if (el) { el.classList.add('playing'); currentMusicItem = el; }
+  var player = document.getElementById('audioPlayer');
+  player.src = '/api/media/music/' + encoded;
+  player.load();
+  player.play().catch(function(){});
+}
+
+// ===== 文件上传 =====
+function onPhotoSelected() {
+  var input = document.getElementById('photoFileInput');
+  var label = document.getElementById('photoFileLabel');
+  var btn   = document.getElementById('photoUploadBtn');
+  if (input.files.length > 0) {
+    label.textContent = input.files.length + ' 个文件已选择';
+    btn.disabled = false;
+  }
+}
+
+function onVideoSelected() {
+  var input = document.getElementById('videoFileInput');
+  var label = document.getElementById('videoFileLabel');
+  var btn   = document.getElementById('videoUploadBtn');
+  if (input.files.length > 0) {
+    label.textContent = input.files[0].name;
+    btn.disabled = false;
+  }
+}
+
+function onMusicSelected() {
+  var input = document.getElementById('musicFileInput');
+  var label = document.getElementById('musicFileLabel');
+  var btn   = document.getElementById('musicUploadBtn');
+  if (input.files.length > 0) {
+    label.textContent = input.files.length + ' 个文件已选择';
+    btn.disabled = false;
+  }
+}
+
+function uploadMedia(type) {
+  var inputId  = type === 'photo' ? 'photoFileInput' : (type === 'video' ? 'videoFileInput' : 'musicFileInput');
+  var input    = document.getElementById(inputId);
+  var progress = document.getElementById(type + 'Progress');
+  var btn      = document.getElementById(type + 'UploadBtn');
+  var files    = Array.from(input.files);
+  if (!files.length) return;
+
+  var MAX = 100 * 1024 * 1024;
+  var oversized = files.filter(function(f) { return f.size > MAX; });
+  if (oversized.length > 0) {
+    progress.innerHTML = '文件过大（最大 100 MB）：' + oversized.map(function(f){ return f.name; }).join(', ');
+    btn.disabled = false;
+    return;
+  }
+
+  btn.disabled = true;
+  var total = files.length, done = 0, failed = 0;
+
+  function uploadOne(file, index) {
+    var formData = new FormData();
+    formData.append('file', file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/media/upload?type=' + type);
+
+    xhr.upload.onprogress = function(e) {
+      if (!e.lengthComputable) return;
+      var pct = Math.round(e.loaded / e.total * 100);
+      var label = total > 1 ? ('[' + (index+1) + '/' + total + '] ') : '';
+      progress.innerHTML = label + file.name + ' ' + pct + '%' +
+        '<div class="bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+    };
+
+    xhr.onload = function() {
+      try {
+        var res = JSON.parse(xhr.responseText);
+        if (res.ok) {
+          done++;
+          if (done + failed === total) {
+            progress.innerHTML = '上传完成：' + done + ' 个成功' + (failed ? '，' + failed + ' 个失败' : '');
+            if (type === 'photo') { loadPhotos(); resetUpload('photo'); }
+            if (type === 'video') { loadVideos(); resetUpload('video'); }
+            if (type === 'music') { loadMusic();  resetUpload('music'); }
+          }
+        } else {
+          failed++;
+          progress.innerHTML = '上传失败：' + (res.msg || '未知错误');
+          btn.disabled = false;
+        }
+      } catch(e) {
+        failed++;
+        progress.innerHTML = '服务器响应错误';
+        btn.disabled = false;
+      }
+    };
+
+    xhr.onerror = function() {
+      failed++;
+      progress.innerHTML = '网络错误，请重试';
+      btn.disabled = false;
+    };
+
+    xhr.send(formData);
+  }
+
+  files.forEach(function(file, i) { uploadOne(file, i); });
+}
+
+function resetUpload(type) {
+  var map = {
+    photo: { input:'photoFileInput', label:'photoFileLabel', btn:'photoUploadBtn', text:'📁 选择照片' },
+    video: { input:'videoFileInput', label:'videoFileLabel', btn:'videoUploadBtn', text:'📁 选择视频' },
+    music: { input:'musicFileInput', label:'musicFileLabel', btn:'musicUploadBtn', text:'📁 选择音乐' }
+  };
+  var m = map[type];
+  if (!m) return;
+  document.getElementById(m.input).value = '';
+  document.getElementById(m.label).textContent = m.text;
+  document.getElementById(m.btn).disabled = true;
+}
+
+// ===== 启动 =====
+update();
+setInterval(update, 3000);
+</script>
+</body>
+</html>

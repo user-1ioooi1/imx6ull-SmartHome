@@ -133,9 +133,9 @@ static u8 dht11_readByte(struct dht11_Dev* dev){
 static int dht11_readData(struct dht11_Dev* dev){
     u8 check;
     unsigned long flags;
-    local_irq_save(flags);
     
     dht11_sendBegin(dev);
+    local_irq_save(flags);
     if(dht11_readResponse(dev)){
 	local_irq_restore(flags);
         return -EINVAL;
