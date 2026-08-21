@@ -1,0 +1,1 @@
+Makefile文件中KERNELDIR修改为正确的linux内核文件夹路径后编译

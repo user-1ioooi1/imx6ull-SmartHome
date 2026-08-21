@@ -43,22 +43,22 @@
 │   ├── sensormonitor        # 传感器定时采集
 |   └── ...
 └── res/
-    └── dashboard.html       # 网页控制台（单页应用）
+    └── dashboard.html       # 网页控制台
 ```
 
 ## 依赖
 - Qt 5.15（core / gui / widgets / multimedia / multimediawidgets）
-- Linux 内核驱动（drivers文件下）
-- 高德地图API 账号
+- Linux 内核驱动（drivers文件夹下）
+- 高德地图天气API 账号
 - 百度 AI 开放平台（ASR/TTS）账号
 - 硅基流动 API 账号
 
 ## 环境要求
-linux 4.1.15(kernel文件下)
-buildroot根系统(https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)
+linux 4.1.15(https://pan.baidu.com/s/1wGzYs7UEvXWoZ6moLDhjKg?pwd=kk78)
+buildroot根文件系统(https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)
 
 ## 界面预览
-![主界面](images/main.png)
+![主界面](images/主界面.png)
 ![网页控制台](images/dashboard.jpg)
 
 
@@ -74,7 +74,6 @@ buildroot根系统(https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)
 ---
 
 ## 配置步骤
-
 ### 修改 API Key
 编辑 `config.ini` 文件，填入你的 apikey
 
