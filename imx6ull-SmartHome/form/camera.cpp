@@ -11,6 +11,7 @@
 #define DETECT_PERIOD_MS  2000
 #define NOCONNECTED_PAGE  0
 #define CONNECTED_PAGE 1
+#define ALBUM_PAGE 2
 
 
 
@@ -27,9 +28,12 @@ Camera::Camera(QWidget *parent) :
             ui->takeBtn->show();
             ui->albumBtn->show();
             ui->switchBtn->show();
-            if(m_state != NODETECTED)
+            if(m_state == NODETECTED){
+                ui->stackedWidget->setCurrentIndex(NOCONNECTED_PAGE);
+            }else{
                 m_camera->start();
-            ui->stackedWidget->setCurrentIndex(0);
+                ui->stackedWidget->setCurrentIndex(CONNECTED_PAGE);
+            }
     });
 
     // 创建 Viewfinder
@@ -37,17 +41,14 @@ Camera::Camera(QWidget *parent) :
         m_viewfinder = new QCameraViewfinder(this);
     }
 
-    // 检查并设置 stackedWidget
-    /*
-    QWidget *firstPage = ui->stackedWidget->widget(0);
-    if (firstPage) {
-        ui->stackedWidget->removeWidget(firstPage);
-        delete firstPage;
-    }*/
-
     if (ui->stackedWidget->indexOf(m_viewfinder) == -1) {
         ui->stackedWidget->insertWidget(CONNECTED_PAGE, m_viewfinder);
     }
+
+    if (ui->stackedWidget->indexOf(m_photoAlbum) == -1) {
+        ui->stackedWidget->insertWidget(ALBUM_PAGE, m_photoAlbum);
+    }
+
     ui->stackedWidget->setCurrentIndex(NOCONNECTED_PAGE);
 
     m_checkTimer = new QTimer(this);
@@ -283,7 +284,7 @@ void Camera::on_albumBtn_clicked()
         ui->switchBtn->hide();
         if (m_state != NODETECTED) m_camera->stop();
         m_photoAlbum->setFolder(filepath);
-        ui->stackedWidget->setCurrentIndex(1);
+        ui->stackedWidget->setCurrentIndex(ALBUM_PAGE);
         m_photoAlbum->showImage();
     }
 }

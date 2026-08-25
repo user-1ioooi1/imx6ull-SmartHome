@@ -79,7 +79,6 @@ void musicPlayer::on_openDirBtn_clicked()
     QDirIterator it(filepath,{"*.mp3","*.wav","*.ogg"});
     while(it.hasNext()){
         it.next();
-        //qInfo() << it.fileName();
         QStandardItem *item = new QStandardItem(it.fileName());
         item->setData(it.fileInfo().canonicalFilePath());
         m_listMoel->appendRow(item);
