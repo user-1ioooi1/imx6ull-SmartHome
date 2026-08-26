@@ -15,7 +15,7 @@ WeatherWidget::WeatherWidget(QWidget *parent) :
     });
     connect(&m_weather,&WeatherApi::weatherReady,[this](WeatherData data){\
         static QString weathers[] = {
-               "晴","阴 ","云","风","雨","雪","雾","霾"
+               "晴","阴","云","风","雨","雪","雾","霾"
         };
         QString weather = "晴";
         for(auto & w : weathers){
