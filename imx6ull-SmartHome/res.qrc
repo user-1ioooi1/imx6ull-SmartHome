@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>GlobalStyle.qss</file>
-        <file>config.ini</file>
         <file>AI.png</file>
     </qresource>
     <qresource prefix="/icon">
