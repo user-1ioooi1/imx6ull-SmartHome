@@ -6,8 +6,8 @@ AiPipeline::AiPipeline(QObject *parent) : QObject(parent),
     m_asr(new asrApi(this)),
     m_tts(new ttsApi(this))
 {
-
-    QSettings cfg(".config.ini", QSettings::IniFormat);
+    QString configPath = QCoreApplication::applicationDirPath() + "/.config.ini";
+    QSettings cfg(configPath, QSettings::IniFormat);
 
     QString asrKey    = cfg.value("ASR/api_key").toString();
     QString asrSecret = cfg.value("ASR/secret_key").toString();

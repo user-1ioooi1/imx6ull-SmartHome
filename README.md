@@ -16,6 +16,7 @@
 | 硬件 | 功能 |
 |------|------|
 | IMX6ULL（ARM Cortex-A7） | 主控 |
+|触摸屏(gt1158)| 屏幕触摸|
 | DHT11 | 温湿度采集 |
 | AP3216C | 环境光照采集 |
 | SR501 | 人体红外感应 |
@@ -38,7 +39,7 @@
 │   ├── hardwaremanager      # 统一硬件接口
 │   ├── mq135                # 空气质量传感器
 │   └── ...
-├── library/                 # 后台服务
+├── library/                 # 后台服务与控件
 │   ├── httpserver           # HTTP 服务器（基于 QTcpServer）
 │   ├── sensormonitor        # 传感器定时采集
 |   └── ...
@@ -48,34 +49,69 @@
 
 ## 依赖
 - Qt 5.15（core / gui / widgets / multimedia / multimediawidgets）
-- Linux 内核驱动（drivers文件夹下）
+- Linux 设备驱动（drivers文件夹）
 - 高德地图天气API 账号
 - 百度 AI 开放平台（ASR/TTS）账号
 - 硅基流动 API 账号
 
 ## 环境要求
-linux 4.1.15(https://pan.baidu.com/s/1wGzYs7UEvXWoZ6moLDhjKg?pwd=kk78)
-buildroot根文件系统(https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)
+
+- **Linux 内核 (4.1.15)**  
+  基于正点原子基础配置，添加 USB 摄像头驱动。  
+  下载链接：[内核](https://pan.baidu.com/s/1wGzYs7UEvXWoZ6moLDhjKg?pwd=kk78)
+
+- **Buildroot 根文件系统**  
+  下载链接：[根文件系统](https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)  
 
 ## 界面预览
 ![主界面](images/主界面.png)
+
 ![网页控制台](images/dashboard.jpg)
 
 
 ## 硬件引脚连接
 | 模块 | 引脚 |
 | :--- | :--- |
-| SG90 舵机 | `gpio1_4` |
+| SG90 舵机 | `GPIO4` |
 | DHT11 温湿度传感器 | `TAMPER2` |
-| SR501 人体红外模块 | `gpio1_2` |
+| SR501 人体红外模块 | `GPIO2` |
 | JDQ 继电器 | `TAMPER5` |
-| MQ135 空气质量传感器 | `gpio1_1` |
+| MQ135 空气质量传感器 | `GPIO1` |
 
 ---
 
-## 配置步骤
-### 修改 API Key
-编辑 `config.ini` 文件，填入你的 apikey
+## 配置
+
+在使用前，需要先配置 API Key。
+
+将 `.config.ini` 配置文件放置在程序所在目录。可以通过模板文件快速创建：
+
+```bash
+cp other/config_template.ini .config.ini
+```
+
+然后编辑 `.config.ini`，将 `YOUR_API_KEY` 替换为你自己的 API Key：
+
+```ini
+[api]
+key=YOUR_API_KEY
+```
+
+## 部署与运行
+
+### 1. 主机端
+
+通过Qt Creator IDE 运行
+
+> **说明**：主机端仅提供基础功能预览，完整功能需在设备上运行。
+
+---
+
+### 2. 嵌入式设备端（完整功能部署）
+开发板需要u-boot、kernel、根文件系统完整环境，交叉编译
+
+## 许可证
+本项目基于 [MIT License](LICENSE) 开源。
 
 
 

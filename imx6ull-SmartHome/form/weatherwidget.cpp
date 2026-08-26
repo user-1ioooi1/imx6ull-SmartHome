@@ -13,7 +13,7 @@ WeatherWidget::WeatherWidget(QWidget *parent) :
         this->cityCode = cityCode;
         m_weather.queryWeather(this->cityCode);
     });
-    connect(&m_weather,&WeatherApi::weatherReady,[this](WeatherData data){\
+    connect(&m_weather,&WeatherApi::weatherReady,[this](WeatherData data){
         static QString weathers[] = {
                "晴","阴","云","风","雨","雪","雾","霾"
         };
