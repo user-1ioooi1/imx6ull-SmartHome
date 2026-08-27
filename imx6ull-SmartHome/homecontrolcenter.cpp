@@ -8,7 +8,7 @@ HomeControlCenter::HomeControlCenter(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("智能家居终端");
-    this->setAttribute(Qt::WA_StyledBackground, true);
+    setAttribute(Qt::WA_StyledBackground, true); //图片做背景可能会用到
 
     m_httpServer = new HttpServer(this);
     m_httpServer->start(8080);

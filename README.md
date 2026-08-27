@@ -17,6 +17,7 @@
 |------|------|
 | IMX6ULL（ARM Cortex-A7） | 主控 |
 |触摸屏(gt1158)| 屏幕触摸|
+|RTL8188EU| USB WIFI模块|
 | DHT11 | 温湿度采集 |
 | AP3216C | 环境光照采集 |
 | SR501 | 人体红外感应 |
@@ -61,7 +62,7 @@
   下载链接：[内核](https://pan.baidu.com/s/1wGzYs7UEvXWoZ6moLDhjKg?pwd=kk78)
 
 - **Buildroot 根文件系统**  
-  下载链接：[根文件系统](https://pan.baidu.com/s/1dBKruw95TAyEtGGHt04l5Q?pwd=2fm9)  
+  下载链接：[根文件系统](https://pan.baidu.com/s/1MiU2oQSNCllVyCPp-nVPFg?pwd=8hf4)  
 
 ## 界面预览
 ![主界面](images/主界面.png)
@@ -108,7 +109,14 @@ key=YOUR_API_KEY
 ---
 
 ### 2. 嵌入式设备端（完整功能部署）
-开发板需要u-boot、kernel、根文件系统完整环境，交叉编译
+开发板需要u-boot、kernel、根文件系统完整环境
+```bash
+cd /root 
+./wifi_connect.sh "SSID" "PASSWORD" #连接wifi
+vi .config.ini #修改配置
+./IMX6ULL-project-smartHome
+```
+
 
 ## 许可证
 本项目基于 [MIT License](LICENSE) 开源。

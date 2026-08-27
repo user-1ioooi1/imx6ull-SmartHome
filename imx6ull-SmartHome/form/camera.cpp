@@ -298,7 +298,7 @@ void Camera::recordBtn_clicked()
 
         QString baseDir = QCoreApplication::applicationDirPath();
         QString videoDir = baseDir + "/video/";
-        QString fileName = QString("%1recording_%2")
+        QString fileName = QString("%1recording_%2.mp4")
                 .arg(videoDir)
                 .arg(QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss"));
 

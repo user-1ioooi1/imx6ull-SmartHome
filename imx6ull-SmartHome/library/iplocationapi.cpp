@@ -18,6 +18,7 @@ void IpLocationApi::queryLocation(){
 
 void IpLocationApi::handleResponse(const QByteArray &data, const QString &url)
 {
+    Q_UNUSED(url);
     QString status = getJsonValue(data, "status");
     if (status != "1") {
         QString info = getJsonValue(data, "info");
