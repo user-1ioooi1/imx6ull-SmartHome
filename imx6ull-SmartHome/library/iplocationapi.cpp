@@ -1,9 +1,11 @@
 #include "iplocationapi.h"
 #include <QSettings>
+#include <QCoreApplication>
 
 IpLocationApi::IpLocationApi(QObject *parent): NetworkApiBase(parent)
 {
-    QSettings cfg(":/config.ini", QSettings::IniFormat);
+    QString configPath = QCoreApplication::applicationDirPath() + "/.config.ini";
+    QSettings cfg(configPath, QSettings::IniFormat);
     m_apiKey = cfg.value("Weather/api_key").toString();
 }
 
@@ -22,6 +24,7 @@ void IpLocationApi::handleResponse(const QByteArray &data, const QString &url)
     QString status = getJsonValue(data, "status");
     if (status != "1") {
         QString info = getJsonValue(data, "info");
+        qDebug() << "ip查询失败";
         emit Error(info.isEmpty() ? "ip查询失败" : info);
         return;
     }

@@ -7,6 +7,7 @@ HEADERS +=  \
     $$PWD/httpserver.h \
     $$PWD/iplocationapi.h \
     $$PWD/networkapibase.h \
+    $$PWD/toastmessage.h \
     $$PWD/ttsapi.h \
     $$PWD/sensormonitor.h \
     $$PWD/aipipeline.h \
@@ -24,6 +25,7 @@ SOURCES +=  \
     $$PWD/httpserver.cpp \
     $$PWD/iplocationapi.cpp \
     $$PWD/networkapibase.cpp \
+    $$PWD/toastmessage.cpp \
     $$PWD/ttsapi.cpp \
     $$PWD/sensormonitor.cpp \
     $$PWD/aipipeline.cpp \

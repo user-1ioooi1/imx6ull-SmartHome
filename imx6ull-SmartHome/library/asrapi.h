@@ -18,7 +18,7 @@ public:
     // 识别 PCM 数据（直接从缓冲区）
     void recognizePcm(const QByteArray &pcmData);
 
-    QString getToken(){ return m_accessToken; }
+    QString getToken() const { return m_accessToken; }
 
 signals:
     void asrReadyData(const QString &text);

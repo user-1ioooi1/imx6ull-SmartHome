@@ -11,6 +11,13 @@ public:
     explicit deepseekApi(const QString &apiKey, const QString &url, QObject *parent = nullptr);
     ~deepseekApi() override;
 
+    void set_apiKey(const QString &apiKey){
+        m_apiKey = apiKey;
+    }
+
+    void set_url(const QString &dsUrl){
+        m_dsUrl = dsUrl;
+    }
     void ds_post(const QString & userMessage);
     QString getResponse();
 signals:

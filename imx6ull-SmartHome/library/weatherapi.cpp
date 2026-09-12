@@ -1,10 +1,13 @@
 #include "weatherapi.h"
 #include <QSettings>
 #include <QUrlQuery>
+#include <QCoreApplication>
 
 WeatherApi::WeatherApi(QObject *parent) : NetworkApiBase(parent)
 {
-    QSettings cfg(":/config.ini", QSettings::IniFormat);
+
+    QString configPath = QCoreApplication::applicationDirPath() + "/.config.ini";
+    QSettings cfg(configPath, QSettings::IniFormat);
     m_apiKey = cfg.value("Weather/api_key").toString();
 }
 

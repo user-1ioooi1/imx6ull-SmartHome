@@ -1,6 +1,7 @@
 #include "aiassistant.h"
 #include "ui_aiassistant.h"
 #include <functional>
+#include "../library/toastmessage.h"
 
 AiAssistant::AiAssistant(QWidget *parent) :
     QWidget(parent),
@@ -12,6 +13,11 @@ AiAssistant::AiAssistant(QWidget *parent) :
         ui->responseLab->setText(text);
     });
     connect(&m_pipeline, &AiPipeline::commandParsed, this, &AiAssistant::onCommandParsed);
+    connect(&m_pipeline, &AiPipeline::error, [this](const QString text, int httpCode){
+            if(httpCode == 0){
+                ToastMessage::showToast(this, "网络未连接");
+            }
+    });
 }
 
 AiAssistant::~AiAssistant()
@@ -21,7 +27,9 @@ AiAssistant::~AiAssistant()
 
 void AiAssistant::on_recorderBtn_pressed()
 {
-    m_pipeline.startRecording();
+    AiPipeline::ErrorCode error = m_pipeline.startRecording();
+    if(error == AiPipeline::ErrorCode::KEY_EMPTY) ToastMessage::showToast(this, "未配置Api Key");
+    if(error == AiPipeline::ErrorCode::KEY_Error) ToastMessage::showToast(this, "百度ASR KEY错误或网络未连接");
 }
 
 void AiAssistant::on_recorderBtn_released()

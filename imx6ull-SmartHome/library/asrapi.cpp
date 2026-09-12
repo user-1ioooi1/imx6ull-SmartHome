@@ -11,9 +11,6 @@ asrApi::~asrApi(){
 
 }
 
-
-
-
 void asrApi::initialize(const QString &apiKey, const QString &secretKey){
 
     // 构建 token URL
@@ -74,11 +71,6 @@ void asrApi::handleResponse(const QByteArray &data, const QString &url){
     }else{
          qDebug() << "识别结果:" << "error \n";
     }
-
-
-
-
-
 }
 
 

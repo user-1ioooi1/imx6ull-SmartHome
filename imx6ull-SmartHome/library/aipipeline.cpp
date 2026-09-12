@@ -9,41 +9,80 @@ AiPipeline::AiPipeline(QObject *parent) : QObject(parent),
     QString configPath = QCoreApplication::applicationDirPath() + "/.config.ini";
     QSettings cfg(configPath, QSettings::IniFormat);
 
-    QString asrKey    = cfg.value("ASR/api_key").toString();
-    QString asrSecret = cfg.value("ASR/secret_key").toString();
-    QString dsKey     = cfg.value("Deepseek/api_key").toString();
-    QString dsUrl     = cfg.value("Deepseek/url").toString();
+    m_asrKey    = cfg.value("ASR/api_key").toString();
+    m_asrSecret = cfg.value("ASR/secret_key").toString();
+    m_dsKey     = cfg.value("Deepseek/api_key").toString();
+    m_dsUrl     = cfg.value("Deepseek/url").toString();
 
-    m_deepseek = new deepseekApi(dsKey, dsUrl, this);
-    m_asr->initialize(asrKey, asrSecret);
+    if(!m_dsKey.isEmpty() && !m_dsUrl.isEmpty()){
+        m_deepseek = new deepseekApi(m_dsKey, m_dsUrl, this);
+        connect(m_deepseek, &deepseekApi::responseHanled, this, &AiPipeline::onLlmResponse);
+        connect(m_deepseek, &deepseekApi::error , this, &AiPipeline::apiErrorHandle);
+    }
 
     connect(m_asr, &asrApi::asrReadyData, this, &AiPipeline::onAsrResult);
-    connect(m_deepseek, &deepseekApi::responseHanled, this, &AiPipeline::onLlmResponse);
+    connect(m_asr, &asrApi::error , this,  &AiPipeline::apiErrorHandle);
+
+    if(!m_asrKey.isEmpty() && !m_asrSecret.isEmpty()){
+        m_asr->initialize(m_asrKey, m_asrSecret);
+    }
 }
 
-void AiPipeline::startRecording()
+AiPipeline::ErrorCode AiPipeline::startRecording()
 {
+    if(m_asrKey.isEmpty() || m_asrSecret.isEmpty()
+            || m_dsKey.isEmpty() || m_dsUrl.isEmpty()){
+
+         m_running = false;
+         return ErrorCode::KEY_EMPTY;
+    }
+
+    if(m_asr->getToken().isEmpty()){
+        m_running = false;
+        return ErrorCode::KEY_Error;
+    }
+
+    m_running = true;
     m_recorder->startRecording();
+
+    return ErrorCode::NoError;
 }
+
+
 
 void AiPipeline::stopRecordingAndProcess()
 {
-    m_recorder->stopRecording();
-    m_asr->recognizePcm(m_recorder->getPcmData());
+    if(m_running == false){
+        return;
+    }else{
+        m_recorder->stopRecording();
+        m_asr->recognizePcm(m_recorder->getPcmData());
+    }
 }
 
+/*
 void AiPipeline::saveRecording(const QString &filePath)
 {
     m_recorder->saveToPcmFile(filePath);
 }
+*/
 
 void AiPipeline::onAsrResult(const QString &text)
 {
+    if(m_running == false){
+        return;
+    }
+    m_deepseek->set_url(m_dsUrl);
+    m_deepseek->set_apiKey(m_dsKey);
     m_deepseek->ds_post(text);
 }
 
 void AiPipeline::onLlmResponse(const QString &text)
 {
+    if(m_running == false){
+        return;
+    }
+
     if (text.size() <= 2)
         return;
 
@@ -51,6 +90,7 @@ void AiPipeline::onLlmResponse(const QString &text)
     m_tts->tts_post(pair.first, m_asr->getToken());
     emit replyReady(pair.first);
     emit commandParsed(pair.second);
+    m_running = false;
 }
 
 QPair<QString,QString> AiPipeline::parseResponse(const QString &text)
@@ -60,4 +100,10 @@ QPair<QString,QString> AiPipeline::parseResponse(const QString &text)
         return {text, ""};
     qDebug() << parts[0] << " "<<parts[1];
     return {parts[0], parts[1]};
+}
+
+void AiPipeline::apiErrorHandle(const QString& errorString, const QString& url, int httpCode)
+{
+    m_running = false;
+    emit error(errorString, httpCode);
 }
