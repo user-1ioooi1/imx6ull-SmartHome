@@ -63,6 +63,7 @@
 
 - **Buildroot 根文件系统**  
   下载链接：[根文件系统](https://pan.baidu.com/s/1MiU2oQSNCllVyCPp-nVPFg?pwd=8hf4)  
+  login：root Password：123456
 
 ## 界面预览
 ![主界面](images/主界面.png)
@@ -120,9 +121,4 @@ vi .config.ini #修改配置
 
 ## 许可证
 本项目基于 [MIT License](LICENSE) 开源。
-
-
-
-
-
 
